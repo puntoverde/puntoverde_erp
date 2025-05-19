@@ -1,0 +1,49 @@
+@font-face {
+    font-family: "Oswald";
+    src:local("Oswald"), url("./../font/Oswald/Oswald-VariableFont_wght.ttf");
+}
+
+@font-face {
+    font-family: "Inconsolata";
+    src:local("Inconsolata"), url("./../font/Inconsolata/Inconsolata-VariableFont_wdth,wght.ttf");
+}
+
+@font-face {
+    font-family: "Arial Rounded MT Bold Font";
+    src:local("Arial Rounded MT Bold Font"), url("./../font/Arial-Rounded-MT-Bold/ARLRDBD.ttf");
+}
+
+@font-face {
+    font-family: "Open Sans";
+    src:local("Open Sans"), url("./../font/Open_Sans/OpenSans-VariableFont_wdth,wght.ttf");
+}
+
+.text-oswald{
+    font-family: "Oswald"!important;
+    font-weight: 400!important;
+    letter-spacing: 5px!important;
+}
+
+.text-consola{
+    font-family: "Inconsolata"!important;
+    font-weight: 300!important;
+    letter-spacing: -2px!important;
+}
+
+.text-arial-round{
+    font-family: "Arial Rounded MT Bold Font"!important;
+}
+
+.text-open-sans{
+    font-family: "Open Sans"!important;
+}
+
+.my-mayus input,.my-mayus textarea{
+    text-transform: uppercase
+  }
+
+
+.divider-color-pv{
+    min-height: 5px!important;
+    background-color: var(--v-primary-base)!important;
+}
