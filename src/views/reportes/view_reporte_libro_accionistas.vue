@@ -58,7 +58,9 @@
       </template>
 
       <template v-slot:item.estatus="{ item }">
-        <v-icon v-if="item.estatus" color="success">mdi-check-circle</v-icon>
+      {{ item.estatus }}
+        <v-icon v-if="item.estatus==1" color="success">mdi-check-circle</v-icon>
+        <v-icon v-else-if="item.estatus==2" color="warning">mdi-alert</v-icon>
         <v-icon v-else color="error">mdi-close-circle</v-icon>
       </template>
 

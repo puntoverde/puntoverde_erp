@@ -196,6 +196,13 @@ export default [
       props: true,
       meta: { requiresAuth: true ,is_modulo:true} 
     },
+    {
+      path: '/cursos-verano',
+      name: 'view_cursos_verano',
+      component: () => import(/* webpackChunkName: "cursos-verano" */ './../views/catalogos/view_cursos_verano.vue'),
+      props: true,
+      meta: { requiresAuth: true ,is_modulo:true} 
+    },
     
     
 
