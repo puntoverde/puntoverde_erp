@@ -57,3 +57,68 @@ export const getSociosInAccionService=async(cve_accion)=>{
         throw Error("Error al guardar antecedentes familiares")
     }
 }
+
+export const getInscripcionesCursosVeranoService=async()=>{
+    try {              
+        const { data ,status} = await $axios.get("curso-verano");
+        return data
+    } catch (error) {
+        throw Error("Error al guardar antecedentes familiares")
+    }
+}
+
+export const getFotoSocioService=async(cve_persona)=>{
+    try {   
+        
+        const { data, status } = await $axios.get(`curso-verano/foto`, {responseType: "blob",params: { cve_persona}});
+        const image_file=new File([data], "fileName.png", { type: data.type })
+        const image_view = await new Promise((resolve, reject) => {
+            let reader = new FileReader();
+            reader.onload = () => resolve(reader.result)
+            reader.onerror = e => reject(e)
+            reader.readAsDataURL(data)
+        })
+    
+        return {image_file,image_view}
+       
+    } catch (error) {
+        throw error
+    }
+}
+
+
+export const getSemanasRestantesService=async(cve_curso_inscripcion)=>{
+    try {              
+        const { data ,status} = await $axios.get("curso-verano/semanas-restantes",{params:{cve_curso_inscripcion}});
+        return data
+    } catch (error) {
+        throw Error("Error al guardar antecedentes familiares")
+    }
+}
+
+export const getColaboradorByNominaService=async(nomina)=>{
+    try {              
+        const { data ,status} = await $axios.get("curso-verano/colaborador",{params:{nomina}});
+        return data
+    } catch (error) {
+        throw Error("Error al guardar antecedentes familiares")
+    }
+}
+
+export const bajaInscripcionCursoService=async(cve_curso_inscripcion)=>{
+    try {              
+        const { data ,status} = await $axios.delete("curso-verano/baja",{params:{cve_curso_inscripcion}});
+        return data
+    } catch (error) {
+        throw Error("Error al guardar antecedentes familiares")
+    }
+}
+
+export const getDataReporteCursoService=async(cve_curso_inscripcion)=>{
+    try {              
+        const { data ,status} = await $axios.get("curso-verano/reporte",{params:{cve_curso_inscripcion}});
+        return data
+    } catch (error) {
+        throw Error("Error al guardar antecedentes familiares")
+    }
+}

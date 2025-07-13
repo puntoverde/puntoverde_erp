@@ -1,4 +1,4 @@
-import {$axios as $axios, $axiosOrigin as $axios_core} from '@/util/axios_instance'
+import {$axios as $axios,$axios_token as $axios_token, $axiosOrigin as $axios_core} from '@/util/axios_instance'
 
 export const getTipoAccionService=async()=>{
     try {              
@@ -57,6 +57,15 @@ export const addConceptoActivacionService=async(cve_accion)=>{
 export const getAccionesExportarService=async()=>{
     try {              
         const {data}=await $axios_core.get("/accionController.php", { params: { accion: 13 } })
+        return data
+    } catch (error) {
+        throw Error("Error al guardar antecedentes familiares")
+    }
+}
+
+export const updateFechasAccionService=async(cve_accion,fecha_alta,fecha_adquisicion)=>{
+    try {              
+        const {data}=await $axios_token.put("/acciones/fechas_libro_accion", { cve_accion,fecha_alta,fecha_adquisicion })
         return data
     } catch (error) {
         throw Error("Error al guardar antecedentes familiares")

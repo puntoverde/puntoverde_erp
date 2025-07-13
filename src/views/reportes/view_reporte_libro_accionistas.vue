@@ -1,40 +1,20 @@
 <template>
   <div>
     <div class="d-flex justify-space-between mb-2">
-      <span></span>
+      <v-btn @click="fnExportarExcel" rounded color="#0f783e" class="white--text"><v-icon
+          color="white">mdi-file-excel</v-icon> Excel</v-btn>
       <!-- <v-breadcrumbs class="bread pl-0" :items="getBreadcrumb">
         <template v-slot:divider>
           <v-icon>mdi-chevron-right</v-icon>
         </template>
 </v-breadcrumbs> -->
-      <h1 class="accent--text oswald--text">Libro Accionistas</h1>
+      <h1 class="accent--text oswald--text">Reporte Libro Accionistas</h1>
     </div>
 
-    <!-- <div class="d-flex justify-space-between mb-5">
-      <v-tooltip bottom>
-        <template v-slot:activator="{ on, attrs }">
-          <v-btn
-            :outlined="attrs['aria-expanded'] == 'true'"
-            color="primary"
-            v-on="on"
-            v-bind="attrs"
-            fab
-            small
-            dark
-            elevation="1"
-            @click="nueva_cuota"
-          >
-            <v-icon>mdi-plus</v-icon>
-          </v-btn>
-        </template>
-        <span>Agregar Cuota</span>
-      </v-tooltip>
 
-      <Search v-model="search" :filters="filters" @emit-buscar="" />
-    </div> -->
 
-    <v-data-table :headers="headers" :items="items" :search="search" :page.sync="page" :items-per-page="itemsPerPage"
-      single-expand item-key="id" show-expand class="table-pv rounded-xl elevation-5" hide-default-footer
+    <v-data-table :headers="headers" :items="lst_libros_acciones" :search="search" :page.sync="page" :items-per-page="itemsPerPage"
+      single-expand item-key="cve_accion" show-expand class="table-pv rounded-xl elevation-5" hide-default-footer
       @item-expanded="fnLoadHistorico">
       <template v-slot:top="{ pagination }">
         <div class="d-flex justify-end align-center">
@@ -57,47 +37,84 @@
         <span class="font-italic">{{ item.apellido_materno }}</span>
       </template>
 
+      <template v-slot:item.tipo_accion_="{ value }">
+        <span v-if="value == 'Familiar'" class="mx-1 font-weight-bold accent--text font-italic">{{ value }}</span>
+        <span v-else>{{ value }}</span>
+      </template>
+
+      <template v-slot:item.fecha_adquisicion="{ value,item }">
+
+        <v-menu offset-y v-model="item.menu" :close-on-content-click="false">
+          <template v-slot:activator="{ on, attrs }">
+            <v-badge  color="" dark bottom borderedx left offset-y="10" offset-x="-2">
+              <span @click="item.menu=true" v-bind="attrs" class="text-decoration-underline">{{ dayjs(value).format('DD MMM YYYY') }}</span>
+              <template v-slot:badge>
+                <v-icon color="secondary" size="15">mdi-pencil</v-icon>
+              </template>
+            </v-badge>
+          </template>
+          <v-date-picker v-model="item.fecha_adquisicion" @input="fnUpdateFecha(item)"></v-date-picker>
+        </v-menu>
+
+
+      </template>
+
+      <template v-slot:item.fecha_alta="{ value ,item}">
+
+        <v-menu offset-y v-model="item.menu2" :close-on-content-click="false">
+          <template v-slot:activator="{ on, attrs }">
+            <v-badge  color="" dark bottom borderedx left offset-y="10" offset-x="-2">
+              <span @click="item.menu2=true" v-bind="attrs" class="text-decoration-underline">{{ dayjs(value).format('DD MMM YYYY') }}</span>
+              <template v-slot:badge>
+                <v-icon color="secondary" size="15">mdi-pencil</v-icon>
+              </template>
+            </v-badge>
+          </template>
+          <v-date-picker v-model="item.fecha_alta" @input="fnUpdateFecha(item)"></v-date-picker>
+        </v-menu>
+
+        <!-- <v-badge color="" dark bottom borderedx left offset-y="10" offset-x="-2">
+          <span class="text-decoration-underline">{{ dayjs(value).format('DD MMM YYYY') }}</span>
+          <template v-slot:badge>
+            <v-icon color="secondary" size="15">mdi-pencil</v-icon>
+          </template>
+        </v-badge> -->
+
+      </template>
+
       <template v-slot:item.estatus="{ item }">
-      {{ item.estatus }}
-        <v-icon v-if="item.estatus==1" color="success">mdi-check-circle</v-icon>
-        <v-icon v-else-if="item.estatus==2" color="warning">mdi-alert</v-icon>
+
+        <v-icon v-if="item.estatus == 1" color="success">mdi-check-circle</v-icon>
+        <v-icon v-else-if="item.estatus == 2" color="warning">mdi-alert</v-icon>
         <v-icon v-else color="error">mdi-close-circle</v-icon>
       </template>
 
-      <!-- <template v-slot:item.actions="{ item }">
-        <v-tooltip bottom>
-          <template v-slot:activator="{ on }">
-            <v-btn v-on="on" x-small icon outlined color="secondary" fab
-              @click="editar_cuota(item.cve_cuota)"><v-icon>mdi-square-edit-outline</v-icon></v-btn>
-          </template>
-          <span>Editar Cuota</span>
-        </v-tooltip>
-      </template> -->
+
 
 
       <template v-slot:expanded-item="{ headers, item }">
-        <td :colspan="headers.length" class="grey lighten-2">
-          <div class="py-2">
+        <td :colspan="headers.length" class="grey lighten-2x">
+          <div class="py-3">
             <v-simple-table>
               <template v-slot:default>
                 <thead>
                   <tr>
-                    <th colspan="3" class="grey lighten-3">
+                    <th colspan="3" class="secondary lighten-4 text-center text-h6 white--text">
                       Dueño Anterior
                     </th>
-                    <th colspan="3" class="grey lighten-3">
+                    <th colspan="4" class="primary lighten-1 text-center text-h6 white--text">
                       Dueño nuevo
                     </th>
-                    <th class="grey lighten-3"></th>
+
                   </tr>
                   <tr>
-                    <th>Nombre</th>
-                    <th>Rfc</th>
-                    <th>Curp</th>
-                    <th>Nombre</th>
-                    <th>Rfc</th>
-                    <th>Curp</th>
-                    <th>Fecha</th>
+                    <th class="secondaryx blue-grey lighten-5 text-center white--textx">Nombre</th>
+                    <th class="blue-grey lighten-5 secondaryx lighten-4x text-center white--textx">Rfc</th>
+                    <th class="blue-grey lighten-5 secondaryx lighten-4x text-center white--textx">Curp</th>
+                    <th class="blue-grey lighten-5 primaryx lighten-1x text-center white--textx">Nombre</th>
+                    <th class="blue-grey lighten-5 primaryx lighten-1x text-center white--textx">Rfc</th>
+                    <th class="blue-grey lighten-5 primaryx lighten-1x text-center white--textx">Curp</th>
+                    <th class="blue-grey lighten-5 primaryx lighten-1x text-center white--textx">Fecha</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -124,18 +141,24 @@ import { onMounted, ref, getCurrentInstance } from "vue";
 import Search from "@/components/ui/Search.vue";
 import numeral from "numeral";
 import { getLibroAccionistaService, getLibroAccionistaHistoricoService } from '@/services/accionistas_service'
+import { updateFechasAccionService } from '@/services/acciones_service'
+import XLSX from "xlsx";
+import { saveAs } from "file-saver";
+import dayjs from 'dayjs';
 
 const root = getCurrentInstance().proxy;
 const headers = ref([
   { text: "Accion", value: "no_accion" },
-  { text: "Posicion", align: "center", sortable: true, value: "id" },
+  { text: "Tipo Accion", align: "center", sortable: true, value: "tipo_accion_" },
   { text: "Dueño", value: "nombre" },
   { text: "Rfc", value: "rfc" },
   { text: "Curp", align: "right", value: "curp" },
+  { text: "Fecha Adquisicion", align: "right", value: "fecha_adquisicion" },
+  { text: "Fecha Alta", align: "right", value: "fecha_alta" },
   { text: "Estatus", align: "center", value: "estatus" },
   { text: "", align: "center", value: "actions", sortable: false },
 ]);
-const items = ref([]);
+const lst_libros_acciones = ref([]);
 const search = ref("");
 
 const page = ref(1);
@@ -171,24 +194,86 @@ onMounted(() => {
 });
 
 async function fnGetLibroAccionista() {
-  items.value = await getLibroAccionistaService();
+  const data=await getLibroAccionistaService();
+  lst_libros_acciones.value = data.map(i=>({...i,menu:false,menu2:false}))
 }
 
 async function fnLoadHistorico({ item, value }) {
+
   if (value) {
-    lst_historico.value=await getLibroAccionistaHistoricoService(item.cve_accion)
+    lst_historico.value = await getLibroAccionistaHistoricoService(item.cve_accion)
   }
-  else{
-    lst_historico.value=[]
+  else {
+    lst_historico.value = []
   }
 }
 
-function nueva_cuota() {
-  root.$router.push({ name: "FormConcepto" });
+
+
+function fnExportarExcel() {
+
+  //tipo reporte 1.todo 2.grupos 3.tipo(socios,invitados,colaboradores)
+
+
+  //crea el libro excel
+  let wb = XLSX.utils.book_new();
+  //crea la hoja para el libro de excel
+  wb.SheetNames.push("reporte_libro_acciones");
+  //se obtienen los datos a exportar 
+  let ws_data1 = lst_libros_acciones.value.map(item => [
+    item.no_accion,
+    item.tipo_accion_,
+    `${item.nombre} ${item.apellido_paterno} ${item.apellido_materno}`,
+    item.rfc,
+    item.curp,
+    item.fecha_adquisicion,
+    item.fecha_alta,
+    item.estatus == 1 ? 'activo' : item.estatus == 2 ? 'bloqueado' : 'inactivo'
+
+  ]);
+
+  // console.log(ws_data1)
+
+
+
+  let ws_data = [[
+    'Accion',
+    'Tipo Accion',
+    'Dueño',
+    'Rfc',
+    'Curp',
+    'Fecha Adquisicion',
+    'Fecha Alta',
+    'Estatus',
+  ], ...ws_data1];
+
+  // console.log(ws_data)
+  let ws = XLSX.utils.aoa_to_sheet(ws_data, { origin: "B2" });
+
+  wb.Sheets["reporte_libro_acciones"] = ws;
+
+  let wbout = XLSX.write(wb, { bookType: "xlsx", type: "binary" });
+
+  function s2ab(s) {
+    let buf = new ArrayBuffer(s.length); //convert s to arrayBuffer
+    let view = new Uint8Array(buf); //create uint8array as viewer
+    for (let i = 0; i < s.length; i++) view[i] = s.charCodeAt(i) & 0xff; //convert to octet
+    return buf;
+  }
+
+  saveAs(new Blob([s2ab(wbout)], { type: "application/octet-stream" }), `reporte_libro_acciones_${dayjs().format("YYYYMMDDHHmmss")}.xlsx`);
+
 }
 
-function editar_cuota(item) {
-  root.$router.push({ name: "FormConcepto", params: { cve_cuota: item } });
+function fnUpdateFecha(data_)
+{
+  console.log(data_)
+  const {fecha_adquisicion,fecha_alta,cve_accion}=data_
+
+  updateFechasAccionService(cve_accion,fecha_alta,fecha_adquisicion)
+  data_.menu=false
+  data_.menu2=false
 }
+
 
 </script>

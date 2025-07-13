@@ -10,8 +10,8 @@
               <v-icon>mdi-plus</v-icon>
             </v-btn>
           </template>
-          <span>Realizar registro</span>
-        </v-tooltip> -->
+<span>Realizar registro</span>
+</v-tooltip> -->
 
         <h1 class="accent--text oswald--text">Cursos de Verano</h1>
 
@@ -22,88 +22,101 @@
 
     <div class="d-flex">
 
-      <div style="width: 40%;height: calc(100vh - 195px);row-gap: 30px;" class="d-flex flex-column align-center justify-center">
+      <div style="width: 20%;height: calc(100vh - 195px);row-gap: 30px;"
+        class="d-flex flex-column align-center justify-centerx">
 
-        <span class="text-h3 accent--text">Curso Verano 2025</span>
+        <span class="text-h4 accent--text">Curso </span>
+        <span class="text-h3 accent--text">Verano</span>
+        <span class="text-h2 accent--text">2025</span>
 
-        <v-btn color="primary"  @click="fnAddInscripcion" style="width: 250px;height: 250px;" rounded="xl">
+        <v-btn color="primary" @click="fnAddInscripcion" style="width: 250px;height: 250px;" rounded="xl">
           <div class="d-flex flex-column">
             <span class="text-h4 font-weight-bold">Crear</span>
             <span class="text-h4 font-weight-bold">Registro</span>
           </div>
-            </v-btn>
+        </v-btn>
+        <v-btn @click="fnOpenRegistroColaboradro" color="secondary" rounded large>Colaboradores</v-btn>
       </div>
-      <div style="width: 60%;">
+      <div style="width: 80%;">
 
-        <v-data-table :headers="headers" :items="items" :search="search" :page.sync="page" :items-per-page="itemsPerPage"
-      class="table-pv rounded-xl elevation-5" hide-default-footer>
-      <template v-slot:top="{ pagination }">
-        <div class="d-flex justify-end align-center">
-          <span class="mr-2 text-caption">filas por pagina</span>
-          <v-select v-model="itemsPerPage" dense hide-details style="max-width: 50px" :items="[5, 10, 50]" />
-          <span class="mx-2 text-caption">pagina {{ pagination.page }} de {{ pagination.pageCount }}</span>
-          <v-pagination circle :total-visible="0" v-model="page" :length="pagination.pageCount"></v-pagination>
-        </div>
-      </template>
-
-      <template v-slot:footer="{ props }">
-        <div>{{ props.pagination.itemsLength }} registro(s)</div>
-      </template>
-
-      <template v-slot:item.tipo_cuota="{ item }">
-        <span v-if="item.tipo_cuota == 1">Persona</span>
-        <span v-else>Accion</span>
-      </template>
-
-      <template v-slot:item.precio="{ item }">
-        <span class="font-weight-black accent--text number--text">
-          {{ numeral(item.precio).format("$0,0.[00]") }}
-        </span>
-      </template>
-
-      <template v-slot:item.opcion_iva="{ item }">
-        <span v-if="item.opcion_iva == 1">Iva Incluido</span>
-        <span v-else>Mas Iva</span>
-      </template>
-
-      <template v-slot:item.genero_aplica="{ item }">
-        <v-icon v-if="item.genero_aplica === 'H'">mdi-human-male</v-icon>
-        <v-icon v-else-if="item.genero_aplica === 'M'">mdi-human-female</v-icon>
-        <v-icon v-else>mdi-human-male-female</v-icon>
-      </template>
-
-      <template v-slot:item.edad_aplica="{ item }">
-        {{ item.edad_aplica == 0 ? "NA" : `${item.edad_aplica} Años` }}
-      </template>
-
-      <template v-slot:item.obligatoria="{ item }">
-        <span class="font-weight-bold"
-          :class="{ 'primary--text': item.obligatoria, 'secondary--text': !item.obligatoria }">{{ item.obligatoria ?
-            'SI' : 'NO' }}</span>
-      </template>
-
-      <template v-slot:item.estatus="{ item }">
-        <v-icon v-if="item.estatus" color="success">mdi-check-circle</v-icon>
-        <v-icon v-else color="error">mdi-close-circle</v-icon>
-      </template>
-
-      <template v-slot:item.actions="{ item }">
-        <v-tooltip bottom>
-          <template v-slot:activator="{ on }">
-            <v-btn v-on="on" x-small icon outlined color="secondary"
-              fab><v-icon>mdi-square-edit-outline</v-icon></v-btn>
+        <v-data-table :headers="headers" :items="lst_inscripciones" :search="search" :page.sync="page"
+          :items-per-page="itemsPerPage" class="table-pv rounded-xl elevation-5" hide-default-footer>
+          <template v-slot:top="{ pagination }">
+            <div class="d-flex justify-end align-center">
+              <span class="mr-2 text-caption">filas por pagina</span>
+              <v-select v-model="itemsPerPage" dense hide-details style="max-width: 50px" :items="[5, 10, 50]" />
+              <span class="mx-2 text-caption">pagina {{ pagination.page }} de {{ pagination.pageCount }}</span>
+              <v-pagination circle :total-visible="0" v-model="page" :length="pagination.pageCount"></v-pagination>
+            </div>
           </template>
-          <span>Editar Cuota</span>
-        </v-tooltip>
-      </template>
-    </v-data-table>
+
+          <template v-slot:footer="{ props }">
+            <div>{{ props.pagination.itemsLength }} registro(s)</div>
+          </template>
+
+          <template v-slot:item.nombre="{ item }">
+            <span>{{ item.nombre }}</span><span class="font-weight-bold mx-1">{{ item.apellido_paterno }}</span><span
+              class="font-italic">{{ item.apellido_materno }}</span>
+          </template>
+
+          <template v-slot:item.precio="{ item }">
+            <span class="font-weight-black accent--text number--text">
+              {{ numeral(item.precio).format("$0,0.[00]") }}
+            </span>
+          </template>
+
+          <template v-slot:item.opcion_iva="{ item }">
+            <span v-if="item.opcion_iva == 1">Iva Incluido</span>
+            <span v-else>Mas Iva</span>
+          </template>
+
+          <template v-slot:item.genero_aplica="{ item }">
+            <v-icon v-if="item.genero_aplica === 'H'">mdi-human-male</v-icon>
+            <v-icon v-else-if="item.genero_aplica === 'M'">mdi-human-female</v-icon>
+            <v-icon v-else>mdi-human-male-female</v-icon>
+          </template>
+
+          <template v-slot:item.edad_aplica="{ item }">
+            {{ item.edad_aplica == 0 ? "NA" : `${item.edad_aplica} Años` }}
+          </template>
+
+          <template v-slot:item.obligatoria="{ item }">
+            <span class="font-weight-bold"
+              :class="{ 'primary--text': item.obligatoria, 'secondary--text': !item.obligatoria }">{{ item.obligatoria ?
+                'SI' : 'NO' }}</span>
+          </template>
+
+          <template v-slot:item.estatus="{ item }">
+            <v-icon v-if="item.estatus==1" color="success">mdi-check-circle</v-icon>
+            <v-icon v-else color="error">mdi-close-circle</v-icon>
+          </template>
+
+          <template v-slot:item.actions="{ item }">
+            <div class="redx" style="width: 80px;" v-if="item.estatus==1">
+              <v-tooltip bottom>
+                <template v-slot:activator="{ on }">
+                  <v-btn v-on="on" x-small icon outlined color="secondary" class="mr-1"
+                    @click="fnGetReingreso(item.cve_curso_verano_inscripcion)" fab><v-icon>mdi-redo</v-icon></v-btn>
+                </template>
+                <span>Reingresar</span>
+              </v-tooltip>
+              <v-tooltip bottom>
+                <template v-slot:activator="{ on }">
+                  <v-btn @click="fnBajaIncripcionCurso(item.cve_curso_verano_inscripcion)" v-on="on" x-small icon outlined color="grey darken-3" class="ml-1"
+                    fab><v-icon>mdi-trash-can</v-icon></v-btn>
+                </template>
+                <span>Cancelacion</span>
+              </v-tooltip>
+            </div>
+          </template>
+        </v-data-table>
 
       </div>
 
     </div>
 
 
-    
+
 
 
     <v-dialog v-model="dialog_recibo" width="450" content-class="rounded-xl" scrollable>
@@ -146,6 +159,9 @@
 
         <v-toolbar elevation="0" height="75">
           <v-toolbar-title>Cédula de inscripción</v-toolbar-title>
+          <v-text-field v-model="folio_boleta" hide-details outlined dense placeholder="folio boleta" reverse
+            v-mask="'########'" style="max-width: 110px;font-size: 18px;" class="ml-5 rounded-xl elevation-1 xtext-h6"
+            color="secondary" roundedx :error-messages="iErrors.folio_boleta"></v-text-field>
           <v-spacer></v-spacer>
           <v-btn icon @click="fnCloseRegistro">
             <v-icon>mdi-close</v-icon>
@@ -208,7 +224,7 @@
 
               <div class="d-flex bluex" style="column-gap: 15px;">
                 <div>
-                  <span>Nombre</span>{{ cve_persona }}
+                  <span>Nombre</span>
                   <v-menu v-model="menu_socios" v-if="cve_cuota == 42" content-class="rounded-xl">
                     <template v-slot:activator="{ on, attrs }">
                       <span class="text-decoration-underline text-subtitle-2 blue--text ml-3"
@@ -224,7 +240,7 @@
                                 class="font-italic">{{
                                   socios_.apellido_materno }}</span> </v-list-item-title>
                             <v-list-item-subtitle>{{ socios_.sexo }} - {{ dayjs().diff(socios_.fecha_nacimiento, "year")
-                              }}
+                            }}
                               años</v-list-item-subtitle>
                           </v-list-item-content>
                           <v-list-item-action>
@@ -307,11 +323,16 @@
               </div>
             </div>
 
-            <div style="width: 130px; height: 161px;border:2px solid; background-size: cover;background-repeat: no-repeat;background-position:top 5px left 10px;position: relative;" :style="{backgroundImage:`url(${foto_view})`,borderColor: Boolean(iErrors.foto)?'red':'#9e9e9e'}" class="greyx rounded-lg">
+            {{ foto }}
+            <!-- {{ foto_view }} -->
+            <div
+              style="width: 130px; height: 161px;border:2px solid; background-size: cover;background-repeat: no-repeat;position: relative;"
+              :style="{ backgroundImage: `url(${foto_view})`, borderColor: Boolean(iErrors.foto) ? 'red' : '#9e9e9e' }"
+              class="greyx rounded-lg">
               <!-- <img v-if="foto" :src="foto_view" alt="" width="130px" height="161px" style="margin-left: 5%;margin-top: 5%;">
               <img v-else src="@/assets/nina.png" width="90%" height="90%" style="margin-left: 5%;margin-top: 5%;"></img>-->
               <v-btn fab x-small style="position:absolute; bottom: -15px;left: -10px;" color="info"
-                @click="fnOpenCamara"><v-icon>mdi-camera</v-icon></v-btn> 
+                @click="fnOpenCamara"><v-icon>mdi-camera</v-icon></v-btn>
               <!-- <v-btn fab x-small style="bottom: 10px;left: 5px;" color="info"><v-icon>mdi-folder-image</v-icon></v-btn> -->
 
             </div>
@@ -384,8 +405,8 @@
             <div>
               <span>Grupo</span>
               <v-select v-model="grupo" placeholder="Grupo" :items="lst_grupos"
-                item-value="cve_curso_verano_programa_grupo" item-text="nombre" outlined dense hide-details
-                :error-messages="iErrors.grupo"></v-select>
+                item-value="cve_curso_verano_programa_grupo" :item-text="i => `${i.nombre} - ${i.cupo_actual}`" outlined
+                dense hide-details :error-messages="iErrors.grupo"></v-select>
             </div>
           </div>
           <div class="mt-3">
@@ -416,10 +437,12 @@
         </v-toolbar>
         <v-card-text class="pt-5">
 
-          <div style="border:solid 1px #9e9e9e;width: 360px; height: 600px;position: relative;overflow: hidden;" class="rounded-lg">
-            <video id="video-camara" autoplay class="rounded-xl" style="position: absolute;margin-left: -220px;"></video>
+          <div style="border:solid 1px #9e9e9e;width: 360px; height: 600px;position: relative;overflow: hidden;"
+            class="rounded-lg">
+            <video id="video-camara" autoplay class="rounded-xl"
+              style="position: absolute;margin-left: -220px;"></video>
             <canvas id="photo-camara" style="position: absolute;"></canvas>
-            <img src="@/assets/ovalo.png" style="position: absolute; width: 360px;height: 600px;"/>
+            <img src="@/assets/ovalo.png" style="position: absolute; width: 360px;height: 600px;" />
           </div>
         </v-card-text>
         <v-divider></v-divider>
@@ -432,13 +455,92 @@
     </v-dialog>
 
 
+    <v-dialog v-model="dialog_reingreso" width="300">
+      <v-card class="rounded-xl">
+        <v-toolbar>
+          <v-toolbar-title>Reingreso</v-toolbar-title>
+          <v-spacer></v-spacer>
+          <v-btn icon><v-icon>mdi-close</v-icon></v-btn>
+        </v-toolbar>
+
+        <v-card-text class="mt-5">
+
+          <v-text-field outlined placeholder="Folio" hide-details class="mb-3" style="font-size: 30px;"
+            reverse></v-text-field>
+
+          <span>semanas</span>
+          <div class="d-flex flex-wrap">
+
+            <div class="d-flex flex-wrap justify-space-around white" style="width: 100%; row-gap: 15px;">
+              <div class="bluex d-flex align-center" >
+                <v-checkbox class="mt-0 check-size" v-model="semanas" label="semana 1" hide-details value="semana1"
+                  :error-messages="iErrors.semana1" :disabled="!Boolean(semana1_view_ins)"></v-checkbox>
+              </div>
+              <div class="bluex d-flex align-center" >
+                <v-checkbox class="mt-0 check-size" v-model="semanas" label="semana 2" hide-details value="semana2"
+                  :error-messages="iErrors.semana2" :disabled="!Boolean(semana2_view_ins)"></v-checkbox>
+              </div>
+              <div class="bluex d-flex align-center" >
+                <v-checkbox class="mt-0 check-size" v-model="semanas" label="semana 3" hide-details value="semana3"
+                  :error-messages="iErrors.semana3" :disabled="!Boolean(semana3_view_ins)"></v-checkbox>
+              </div>
+              <div class="bluex d-flex align-center" >
+                <v-checkbox class="mt-0 check-size" v-model="semanas" label="semana 4" hide-details value="semana4"
+                  :error-messages="iErrors.semana4" :disabled="!Boolean(semana4_view_ins)"></v-checkbox>
+              </div>
+            </div>
+          </div>
+
+        </v-card-text>
+        <v-card-actions>
+          <v-btn block rounded color="primary"> Aceptar</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
+
+    <v-dialog v-model="dialog_colaborador" width="350">
+      <v-card class="rounded-xl">
+        <v-toolbar>
+          <v-toolbar-title>Buscar Colaborador</v-toolbar-title>
+          <v-spacer></v-spacer>
+          <v-btn icon><v-icon>mdi-close</v-icon></v-btn>
+        </v-toolbar>
+
+        <v-card-text class="mt-5">
+
+          <v-text-field v-model="nomina" @keypress.enter="fnGetColaboradorByNomina" outlined placeholder="Nomina"
+            hide-details class="mb-3" style="font-size: 30px;" reverse></v-text-field>
+
+          <v-list>
+            <v-list-item @click="fnOpenRegistroColaborador(colaborador.cve_persona)">
+              <v-list-item-content>
+                <v-list-item-title>
+                  <span>{{ colaborador?.nombre }}</span>
+                  <span class="mx-1 font-weight-bold">{{ colaborador?.apellido_paterno }}</span>
+                  <span class="font-italic">{{ colaborador?.apellido_materno }}</span>
+                </v-list-item-title>
+                <v-list-item-subtitle></v-list-item-subtitle>
+              </v-list-item-content>
+            </v-list-item>
+          </v-list>
+
+        </v-card-text>
+
+      </v-card>
+    </v-dialog>
+
+
+
+
+
   </div>
 </template>
 <script setup>
 import { onMounted, ref, getCurrentInstance, watch, computed } from "vue";
 import Search from "@/components/ui/Search.vue";
 import numeral from "numeral";
-import { getCargosByFolioService, getProgramaCursoVeranoService, getGrupoCursoVeranoService, getPersonaExisteService, setCreateInscripcionService, getSociosInAccionService } from '@/services/curso_verano_service'
+import { getCargosByFolioService, getProgramaCursoVeranoService, getGrupoCursoVeranoService, getPersonaExisteService, setCreateInscripcionService, getSociosInAccionService, getInscripcionesCursosVeranoService, getFotoSocioService, getSemanasRestantesService, getColaboradorByNominaService, bajaInscripcionCursoService } from '@/services/curso_verano_service'
 import dayjs from "dayjs";
 import { useInscripcionCursoVeranoValidacion } from '@/composables/useInscripcionCursoVeranoValidacion'
 import { saveAs } from "file-saver";
@@ -448,17 +550,19 @@ const { iValid, iErrors, iClear } = useInscripcionCursoVeranoValidacion()
 
 const root = getCurrentInstance().proxy;
 const headers = ref([
-  { text: "Folio", align: "center", sortable: true, value: "numero_cuota" },
-  { text: "semanas", value: "tipo_cuota" },
-  { text: "Nombre completo", value: "cuota" },
-  { text: "años", value: "opcion_iva" },
-  { text: "Tutor", align: "right", value: "precio" },
-  { text: "Telefono Tutor", align: "center", value: "obligatoria" },
-  { text: "Programa", value: "genero_aplica", align: "center" },
-  { text: "Grupo", value: "edad_aplica" },  
+  { text: "Folio", align: "center", sortable: true, value: "folio_pago" },
+  { text: "Folio Boleta", align: "center", sortable: true, value: "folio_boleta" },
+  { text: "semanas", value: "semanas" },
+  { text: "Nombre completo", value: "nombre" },
+  { text: "años", value: "edad" },
+  { text: "Tutor", align: "right", value: "responsable" },
+  { text: "Telefono Tutor", align: "center", value: "telefono_contacto" },
+  { text: "Programa", value: "programa", align: "center" },
+  { text: "Grupo", value: "grupo" },
+  { text: "Estatus", value: "estatus" },
   { text: "", align: "center", value: "actions", sortable: false },
 ]);
-const items = ref([]);
+const lst_inscripciones = ref([]);
 const search = ref("");
 
 const page = ref(1);
@@ -496,6 +600,7 @@ const cve_persona = ref()
 const cve_accion = ref()
 
 const folio = ref()
+const folio_boleta = ref()
 const costo = ref()
 const numero_accion = ref()
 
@@ -513,8 +618,11 @@ const programa = ref()
 const grupo = ref()
 const observaciones = ref()
 
-const foto_view=ref()
-const foto=ref()
+const nomina = ref()
+const colaborador = ref()
+
+const foto_view = ref()
+const foto = ref()
 
 
 const lst_cargos = ref([])
@@ -530,6 +638,16 @@ const dialog_recibo = ref(false)
 const ref_nacimiento = ref(null)
 
 const dialog_foto = ref(false)
+
+const dialog_reingreso = ref(false)
+
+const dialog_colaborador = ref(false)
+
+
+const semana1_view_ins = ref(false)
+const semana2_view_ins = ref(false)
+const semana3_view_ins = ref(false)
+const semana4_view_ins = ref(false)
 
 
 const lst_semanas = [
@@ -565,7 +683,8 @@ async function getCargosByFolio() {
 
 async function fnOpenRegistro(cargo_) {
 
-
+  iClear()
+  // getFotoSocio()
 
   if (Boolean(cargo_.cve_persona) && cargo_.cve_cuota == 42) {
     const data_ = await getPersonaExisteService(cargo_.cve_persona)
@@ -588,10 +707,29 @@ async function fnOpenRegistro(cargo_) {
   lst_cargos.value = []
 }
 
+async function fnOpenRegistroColaboradro() {
+
+  iClear()
+  fnGetProgramas()
+  cve_cargo.value = undefined
+  cve_cuota.value = 102
+  cve_persona.value = 0
+  cve_accion.value = 1948
+  costo.value = 0
+  numero_accion.value = 3999
+  // dialog_inscripcion.value = true
+  // dialog_recibo.value = false
+  lst_cargos.value = []
+  dialog_colaborador.value = true
+}
+
 function fnCloseRegistro() {
+
+  iClear()
 
   cve_curso.value = 1
   folio.value = undefined
+  folio_boleta.value = undefined
   cve_accion.value = undefined
   cve_persona.value = undefined
   cve_cargo.value = undefined
@@ -615,8 +753,8 @@ function fnCloseRegistro() {
   costo.value = undefined
   numero_accion.value = undefined
   dialog_inscripcion.value = false
-  foto.value=undefined
-  foto_view.value=undefined
+  foto.value = undefined
+  foto_view.value = undefined
 }
 
 
@@ -624,11 +762,15 @@ function fnCloseRegistro() {
 
 async function fnCreateRegistro() {
 
-  const semanas_ = semanas.value.reduce((a, v) => ({ ...a, [v]: folio.value }), {})
+  iClear()
+
+  //es 1 cuando no se encuentre ningun folio en el caso de 
+  const semanas_ = semanas.value.reduce((a, v) => ({ ...a, [v]: folio.value ?? 1 }), {})
 
   const data_send = {
     cve_curso_verano: cve_curso.value,
     folio: folio.value,
+    folio_boleta: folio_boleta.value,
     cve_accion: cve_accion.value,
     cve_persona: cve_persona.value,
     cve_cargo: cve_cargo.value,
@@ -647,7 +789,7 @@ async function fnCreateRegistro() {
     programa: programa.value,
     grupo: grupo.value,
     observaciones: observaciones.value,
-    foto:foto.value
+    foto: foto.value
   }
 
   console.log(data_send)
@@ -661,6 +803,7 @@ async function fnCreateRegistro() {
   if (Boolean(id_inscripcion)) {
     root.$toast.success("Inscripcion al curso realizada con exito");
     fnCloseRegistro()
+    fnGetInscripcionesCursosVerano()
   }
   else root.$toast.error("No se registro al curso ocurrio un error");
 
@@ -714,12 +857,8 @@ async function fnOpenCamara() {
 
   await new Promise(resolve => setTimeout(resolve, 1000))
 
-  window.navigator.mediaDevices.getUserMedia({video:{height:600,width:800}}).then(stream => {
+  window.navigator.mediaDevices.getUserMedia({ video: { height: 600, width: 800 } }).then(stream => {
     const video = document.getElementById("video-camara")
-    
-
-    // videoHeight: 480
-    // videoWidth: 640
 
     video.srcObject = stream
 
@@ -727,14 +866,12 @@ async function fnOpenCamara() {
     console.log(video.videoHeight)
   }).catch(error => console.log(error))
 
-const canvas_photo = document.getElementById('photo-camara');
-canvas_photo.width = 360;
-  // canvas_photo.height = video_camara.videoHeight;
-  canvas_photo.height = 600;
-const context = canvas_photo.getContext('2d');
-  
-// solo era para ver donde quedaba el recorte
-// context.strokeRect(30,35,300,425)
+  const canvas_photo = document.getElementById('photo-camara');
+
+  const context = canvas_photo.getContext('2d');
+
+  // solo era para ver donde quedaba el recorte
+  // context.strokeRect(30,35,300,425)
 
 
 }
@@ -742,48 +879,109 @@ const context = canvas_photo.getContext('2d');
 async function fnCapturePhoto() {
   const video_camara = document.getElementById('video-camara');
   const canvas_photo = document.getElementById('photo-camara');
-  // canvas_photo.width = video_camara.videoWidth;
-  canvas_photo.width = 360;
-  // canvas_photo.height = video_camara.videoHeight;
-  canvas_photo.height = 600;
+  canvas_photo.width = 300;
+  canvas_photo.height = 425;
 
   // video_camara.style.display="none"
 
   const context = canvas_photo.getContext('2d');
 
   // context.drawImage(video_camara, 220, 0, 360, 600,0,0,360,600);
-  context.drawImage(video_camara, 250, 35, 300, 425,0,0,300,425);
+  context.drawImage(video_camara, 250, 35, 300, 425, 0, 0, 300, 425);
 
-  const foto_i=await new Promise(resolve=>{
-      canvas_photo.toBlob(blob => 
-      { 
-        // saveAs(blob,"prueba1111.png")
-        let file_ = new File([blob], "fileName.png", { type: blob.type }); 
-        resolve(file_)
-      })
+  const foto_i = await new Promise(resolve => {
+
+    canvas_photo.toBlob(blob => {
+      // saveAs(blob,`${dayjs().format("YYYYMMDDHHmmss")}.png`)
+      let file_ = new File([blob], "fileName.png", { type: blob.type });
+      resolve(file_)
+    })
   })
-// saveAs(foto_i,"prueba1111.png")
-  foto.value=foto_i
-  foto_view.value=canvas_photo.toDataURL('image/png')
+  // saveAs(foto_i,"prueba1111.png")
+  foto.value = foto_i
+  foto_view.value = canvas_photo.toDataURL('image/png')
 
-  await new Promise(resolve=>setTimeout(resolve,2000))
+  await new Promise(resolve => setTimeout(resolve, 2000))
 
   context.clearRect(0, 0, 360, 600);
 
   console.log(foto_i)
-  dialog_foto.value=false;
+  dialog_foto.value = false;
 
 }
 
-function fnCloseFoto()
-{
-    const canvas_photo = document.getElementById('photo-camara');
-      const context = canvas_photo.getContext('2d');
+function fnCloseFoto() {
+  const canvas_photo = document.getElementById('photo-camara');
+  const context = canvas_photo.getContext('2d');
   context.clearRect(0, 0, 360, 600);
-   dialog_foto.value=false;
+  dialog_foto.value = false;
+}
+
+async function fnGetInscripcionesCursosVerano() {
+  lst_inscripciones.value = await getInscripcionesCursosVeranoService()
+}
+
+async function getFotoSocio() {
+  //  const {image_file,image_view} =await getFotoSocioService(cve_persona.value)
+  const { image_file, image_view } = await getFotoSocioService(24763)
+  foto.value = image_file
+  foto_view.value = image_view
+}
+
+async function fnGetReingreso(id_curso_inscripcion) {
+  semanas.value = []
+  console.log(id_curso_inscripcion)
+  const data_semana = await getSemanasRestantesService(id_curso_inscripcion)
+  if (data_semana) {
+    semana1_view_ins.value = Boolean(parseInt(data_semana.semana1))
+    semana2_view_ins.value = Boolean(parseInt(data_semana.semana2))
+    semana3_view_ins.value = Boolean(parseInt(data_semana.semana3))
+    semana4_view_ins.value = Boolean(parseInt(data_semana.semana4))
+  }
+  else {
+    semana1_view_ins.value = false
+    semana2_view_ins.value = false
+    semana3_view_ins.value = false
+    semana4_view_ins.value = false
+  }
+  dialog_reingreso.value = true
+}
+
+async function fnGetColaboradorByNomina() {
+
+  colaborador.value = await getColaboradorByNominaService(nomina.value)
+
+}
+
+function fnOpenRegistroColaborador(cve_persona_) {
+  cve_persona.value = cve_persona_
+  colaborador.value = undefined
+  nomina.value = undefined
+  dialog_colaborador.value = false
+  dialog_inscripcion.value = true
+}
+
+async function fnBajaIncripcionCurso(id_curso_inscripcion) {
+  // 
+  const confirm = await root.$confirm(
+      'Desea realmente dar de baja esta inscripcion, seleccione opción <b>"Si"</b> en caso contrario la opción <b>"No"</b>',
+      { title: "info", width: 350, persistent: true }
+    );
+    if (confirm) {
+     console.log("da de baja")
+     await bajaInscripcionCursoService(id_curso_inscripcion)
+     fnGetInscripcionesCursosVerano()
+    }
 }
 
 //#endregion metodos
+
+onMounted(() => {
+
+
+  fnGetInscripcionesCursosVerano()
+
+})
 
 </script>
 

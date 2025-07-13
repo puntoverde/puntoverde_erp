@@ -9,10 +9,12 @@ export const useInscripcionCursoVeranoValidacion= () => {
     const schema = object().shape({  
         // cve_curso_verano:number().required().oneOf([1,2]).label("Curso Verano"),   
         cve_curso_verano:number().required().label("Curso Verano"),
-        folio:string().required().trim().uppercase().label("Folio de pago"),
+        folio:string().when('cve_cuota',{is:102,then:s=>s.notRequired(),otherwise:s=>s.required()}).trim().uppercase().label("Folio de pago"),
+        folio_boleta:string().required().trim().uppercase().label("Folio boleta"),
         cve_accion:number().required().label("Accion"),
         cve_persona:number().required().label("Persona"),
-        cve_cargo:number().required().label("Cargo"),
+        cve_cargo:number().when('cve_cuota',{is:102,then:s=>s.notRequired(),otherwise:s=>s.required()}).label("Cargo"),
+        cve_cuota:number().required().label("Cuota"),
         nombre:string().required().trim().uppercase().label("Nombre"),
         paterno:string().required().trim().uppercase().label("Apellido paterno"),
         materno:string().required().trim().uppercase().label("Apellido materno"),
@@ -26,7 +28,9 @@ export const useInscripcionCursoVeranoValidacion= () => {
         programa:number().required().label("Programa"),
         grupo:number().required().label("Grupo"),
         observaciones:string().required().trim().uppercase().label("Observaciones"),
-        semana1:number().when(['semana2','semana3','semana4'],([semana2,semana3,semana4],s)=>[semana2,semana3,semana4].some(i=>Boolean(i))?s.notRequired():s.required()).label("Semana 1"),
+        semana1:number()
+        .when(['semana2','semana3','semana4'],([semana2,semana3,semana4],s)=>[semana2,semana3,semana4].some(i=>Boolean(i))?s.notRequired():s.required())
+        .label("Semana 1"),
         semana2:number()
         .when(['semana1','semana3','semana4'],([semana1,semana3,semana4],s)=>[semana1,semana3,semana4].some(i=>Boolean(i))?s.notRequired():s.required())
         .label("Semana 2"),
@@ -37,7 +41,7 @@ export const useInscripcionCursoVeranoValidacion= () => {
         .when(['semana1','semana2','semana3'],([semana1,semana2,semana3],s)=>[semana1,semana2,semana3].some(i=>Boolean(i))?s.notRequired():s.required())
         .label("Semana 4"),
         foto: mixed()
-      .required("Required")
+      .required("Foto es requerida")
     //   .test("is-valid-type", "No es una  foto valida",
     //     value => isValidFileType(value && value.name.toLowerCase(), "image"))
     //   .test("is-valid-size", "tamaño maximo de 100KB",
@@ -54,9 +58,11 @@ export const useInscripcionCursoVeranoValidacion= () => {
     const iErrors = reactive({
         cve_curso_verano:'',
         folio:'',
+        folio_boleta:'',
         cve_accion:'',
         cve_persona:'',
         cve_cargo:'',
+        cve_cuota:'',
         nombre:'',
         paterno:'',
         materno:'',

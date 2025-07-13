@@ -536,7 +536,7 @@ import {
 } from '@/services/colaborador_service'
 import { getColoniasByCpService } from '@/services/domicilio_service'
 import {useValidacionColaborador, useValidacionColaboradorBeneficiario,useValidacionColaboradorEscolaridad } from '@/composables/useValidacionColaborador'
-// import { useValidacionColaboradorEscolaridad } from '@/composables/useValidacionColaboradorEscolaridad'
+
 import { useFileDialog } from '@vueuse/core'
 import { saveAs } from 'file-saver';
 

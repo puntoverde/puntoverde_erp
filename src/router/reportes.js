@@ -371,6 +371,14 @@ export default [
         component: () => import(/* webpackChunkName: "reporte_libro_accionista" */ '@/views/reportes/view_reporte_libro_accionistas.vue'),
         props: true,
         meta: { requiresAuth: true ,is_modulo:true}
-      },      
+      }, 
+      
+      {
+        path: '/reporte-cursos-verano',
+        name: 'reporte_cursos_verano',
+        component: () => import(/* webpackChunkName: "reporte_cursos_verano" */ '@/views/reportes/view_reporte_cursos_verano.vue'),
+        props: true,
+        meta: { requiresAuth: true ,is_modulo:true}
+      }, 
       
 ]
