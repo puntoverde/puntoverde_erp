@@ -92,17 +92,24 @@
           </template>
 
           <template v-slot:item.actions="{ item }">
-            <div class="redx" style="width: 80px;" v-if="item.estatus==1">
+            <div class="redx" style="width: 110px;" v-if="item.estatus==1">
               <v-tooltip bottom>
                 <template v-slot:activator="{ on }">
-                  <v-btn v-on="on" x-small icon outlined color="secondary" class="mr-1"
+                  <v-btn v-on="on" x-small icon outlined color="secondary" class=""
+                    @click="fnGetEdit(item.cve_curso_verano_inscripcion)" fab><v-icon>mdi-pencil</v-icon></v-btn>
+                </template>
+                <span>Editar</span>
+              </v-tooltip>
+              <v-tooltip bottom>
+                <template v-slot:activator="{ on }">
+                  <v-btn v-on="on" x-small icon outlined color="secondary" class="mx-1"
                     @click="fnGetReingreso(item.cve_curso_verano_inscripcion)" fab><v-icon>mdi-redo</v-icon></v-btn>
                 </template>
                 <span>Reingresar</span>
               </v-tooltip>
               <v-tooltip bottom>
                 <template v-slot:activator="{ on }">
-                  <v-btn @click="fnBajaIncripcionCurso(item.cve_curso_verano_inscripcion)" v-on="on" x-small icon outlined color="grey darken-3" class="ml-1"
+                  <v-btn @click="fnBajaIncripcionCurso(item.cve_curso_verano_inscripcion)" v-on="on" x-small icon outlined color="grey darken-3" class=""
                     fab><v-icon>mdi-trash-can</v-icon></v-btn>
                 </template>
                 <span>Cancelacion</span>
@@ -153,7 +160,7 @@
       </v-card>
     </v-dialog>
 
-    <v-dialog v-model="dialog_inscripcion" persistent scrollable width="900">
+    <v-dialog v-model="dialog_inscripcion" persistent scrollable width="900" content-class="rounded-xl">
 
       <v-card class="rounded-xl">
 
@@ -195,19 +202,19 @@
             <div class="d-flex justify-space-around white" style="width: 100%;">
               <div class="bluex d-flex align-center">
                 <v-checkbox class="mt-0 check-size" v-model="semanas" label="semana 1" hide-details value="semana1"
-                  :error-messages="iErrors.semana1"></v-checkbox>
+                  :error-messages="iErrors.semana1" :disabled="Boolean(cve_inscripcion_curso_verano)"></v-checkbox>
               </div>
               <div class="bluex d-flex align-center">
                 <v-checkbox class="mt-0 check-size" v-model="semanas" label="semana 2" hide-details value="semana2"
-                  :error-messages="iErrors.semana2"></v-checkbox>
+                  :error-messages="iErrors.semana2" :disabled="Boolean(cve_inscripcion_curso_verano)"></v-checkbox>
               </div>
               <div class="bluex d-flex align-center">
                 <v-checkbox class="mt-0 check-size" v-model="semanas" label="semana 3" hide-details value="semana3"
-                  :error-messages="iErrors.semana3"></v-checkbox>
+                  :error-messages="iErrors.semana3" :disabled="Boolean(cve_inscripcion_curso_verano)"></v-checkbox>
               </div>
               <div class="bluex d-flex align-center">
                 <v-checkbox class="mt-0 check-size" v-model="semanas" label="semana 4" hide-details value="semana4"
-                  :error-messages="iErrors.semana4"></v-checkbox>
+                  :error-messages="iErrors.semana4" :disabled="Boolean(cve_inscripcion_curso_verano)"></v-checkbox>
               </div>
             </div>
           </div>
@@ -253,11 +260,11 @@
                   </v-menu>
                   <div class="d-flex" style="column-gap: 5px;">
                     <v-text-field v-model="nombre" placeholder="Nombre" outlined dense hide-details
-                      :error-messages="iErrors.nombre" class="my-mayus"></v-text-field>
+                      :error-messages="iErrors.nombre || iErrorsUpdate.nombre" class="my-mayus"></v-text-field>
                     <v-text-field v-model="paterno" placeholder="Apellido Paterno" outlined dense hide-details
-                      :error-messages="iErrors.paterno" class="my-mayus"></v-text-field>
+                      :error-messages="iErrors.paterno || iErrorsUpdate.paterno" class="my-mayus"></v-text-field>
                     <v-text-field v-model="materno" placeholder="Apellido Materno" outlined dense hide-details
-                      :error-messages="iErrors.materno" class="my-mayus"></v-text-field>
+                      :error-messages="iErrors.materno || iErrorsUpdate.materno" class="my-mayus"></v-text-field>
                   </div>
                 </div>
                 <!-- <div style="width: 110px;">
@@ -311,7 +318,7 @@
                     <span class="text-subtitle-1 font-weight-bold" style="height: 22px">F.</span>
                     <v-checkbox class="mt-0 check-size" hide-details></v-checkbox>
                   </div> -->
-                  <v-radio-group v-model="genero" class="mt-0" row hide-details :error-messages="iErrors.genero">
+                  <v-radio-group v-model="genero" class="mt-0" row hide-details :error-messages="iErrors.genero || iErrorsUpdate.genero">
                     <span class="text-subtitle-1 font-weight-bold mr-2" style="height: 22px;color: #0009;">M.</span>
                     <v-radio value="Masculino" class="check-size" off-icon="mdi-checkbox-blank-outline"
                       on-icon="mdi-checkbox-marked"></v-radio>
@@ -347,24 +354,24 @@
           <div class="d-flex" style="column-gap: 5px;">
             <div class="flex-grow-1">
               <span>Nombre Completo</span>
-              <v-text-field v-model="tutor" outlined dense hide-details :error-messages="iErrors.tutor"
+              <v-text-field v-model="tutor" outlined dense hide-details :error-messages="iErrors.tutor || iErrorsUpdate.tutor"
                 class="my-mayus"></v-text-field>
             </div>
             <div>
               <span>telefono de contacto</span>
               <v-text-field v-model="telefono_contacto" outlined dense hide-details
-                :error-messages="iErrors.telefono_contacto" class="my-mayus" v-mask="'(###)#######'"></v-text-field>
+                :error-messages="iErrors.telefono_contacto || iErrorsUpdate.telefono_contacto" class="my-mayus" v-mask="'(###)#######'"></v-text-field>
             </div>
           </div>
           <div class="d-flex" style="column-gap: 5px;">
             <div class="flex-grow-1">
               <span>Calle y numero</span>
-              <v-text-field v-model="calle_numero" outlined dense hide-details :error-messages="iErrors.calle_numero"
+              <v-text-field v-model="calle_numero" outlined dense hide-details :error-messages="iErrors.calle_numero || iErrorsUpdate.calle_numero"
                 class="my-mayus"></v-text-field>
             </div>
             <div>
               <span>Colonia</span>
-              <v-text-field v-model="colonia" outlined dense hide-details :error-messages="iErrors.colonia"
+              <v-text-field v-model="colonia" outlined dense hide-details :error-messages="iErrors.colonia || iErrorsUpdate.colonia"
                 class="my-mayus"></v-text-field>
             </div>
           </div>
@@ -376,7 +383,7 @@
           <div class="d-flex justify-space-between" style="column-gap: 15px;">
             <div style="width: 280px;">
               <span>Fecha inscripcion</span>
-              <div class="text-h6">{{ fecha_inscripcion }}</div>
+              <div class="text-h6">{{ fecha_inscripcion.format('DD [de] MMMM [de] YYYY') }}</div>
             </div>
             <div>
               <span>¿Sabe nadar?</span>
@@ -387,7 +394,7 @@
                 <v-checkbox hide-details class="mt-0 check-size"></v-checkbox>
               </div> -->
               <v-radio-group v-model="nadar" class="mt-0 ml-0 mr-0" row hide-details style="width: 150px;"
-                :error-messages="iErrors.nadar">
+                :error-messages="iErrors.nadar || iErrorsUpdate.nadar">
                 <span class="text-subtitle-1 font-weight-bold mr-2" style="height: 22px;color: #0009;">Si.</span>
                 <v-radio :value="1" class="check-size mr-0" off-icon="mdi-checkbox-blank-outline"
                   on-icon="mdi-checkbox-marked"></v-radio>
@@ -400,26 +407,27 @@
               <span>Programa</span>
               <v-select v-model="programa" :items="lst_programa" item-value="cve_curso_verano_programa"
                 item-text="nombre" placeholder="programa" outlined dense hide-details @change="fnGetProgramasGrupo"
-                :error-messages="iErrors.programa"></v-select>
+                :error-messages="iErrors.programa" :disabled="Boolean(cve_inscripcion_curso_verano)" style="max-width: 250px;"></v-select>
             </div>
             <div>
               <span>Grupo</span>
               <v-select v-model="grupo" placeholder="Grupo" :items="lst_grupos"
                 item-value="cve_curso_verano_programa_grupo" :item-text="i => `${i.nombre} - ${i.cupo_actual}`" outlined
-                dense hide-details :error-messages="iErrors.grupo"></v-select>
+                dense hide-details :error-messages="iErrors.grupo" :disabled="Boolean(cve_inscripcion_curso_verano)" style="max-width: 250px;"></v-select>
             </div>
           </div>
           <div class="mt-3">
             <span>Observaciones especiales(alergias,fobias,capacidades diferentes,tratamiento medico etc.)</span>
             <div><v-textarea v-model="observaciones" label="Observaciones" filled outlined rows="3" hide-details
-                :error-messages="iErrors.observaciones" class="my-mayus"></v-textarea></div>
+                :error-messages="iErrors.observaciones || iErrorsUpdate.observaciones" class="my-mayus"></v-textarea></div>
           </div>
 
         </v-card-text>
         <v-divider></v-divider>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn @click="fnCreateRegistro"><v-icon>mdi-content-save</v-icon> Guardar Registro</v-btn>
+          <v-btn v-if="Boolean(cve_inscripcion_curso_verano)" @click="fnUpdateRegistro" color="info lighten-2" class="black--text"><v-icon>mdi-update</v-icon> Actualizar Registro</v-btn>
+          <v-btn v-else @click="fnCreateRegistro"><v-icon>mdi-content-save</v-icon> Guardar Registro</v-btn>
         </v-card-actions>
 
       </v-card>
@@ -457,43 +465,71 @@
 
     <v-dialog v-model="dialog_reingreso" width="300">
       <v-card class="rounded-xl">
-        <v-toolbar>
-          <v-toolbar-title>Reingreso</v-toolbar-title>
-          <v-spacer></v-spacer>
-          <v-btn icon><v-icon>mdi-close</v-icon></v-btn>
+
+        <v-toolbar elevation="0">
+          <v-toolbar-title>Cosultar recibo para reingreso</v-toolbar-title>
+          <template v-slot:extension>
+            <div class="d-flex align-center redx mb-3" style="width: 100%;column-gap: 10px;">              
+              <v-text-field v-model="folio_reingreso" outlined dense hide-details style="max-width: 150px;font-size: 30px;"
+                reverse v-mask="'########'" @keyup.enter="getCargosByFolioReingreso"></v-text-field>
+              <v-btn @click="getCargosByFolioReingreso"> <v-icon>mdi-magnify</v-icon> buscar</v-btn>
+            </div>
+          </template>
         </v-toolbar>
+        <v-divider></v-divider>
 
-        <v-card-text class="mt-5">
+       
 
-          <v-text-field outlined placeholder="Folio" hide-details class="mb-3" style="font-size: 30px;"
-            reverse></v-text-field>
+        <v-card-text class="mt-5x pa-0">
 
-          <span>semanas</span>
-          <div class="d-flex flex-wrap">
+
+          <v-list v-if="lst_cargos_reingreso.length > 0">
+            <v-list-item v-for="cargos in lst_cargos_reingreso" @click="fnSelectedCargoReingreso(cargos.cve_cargo)" :class="{'blue-grey lighten-5':cve_cargo_reingreso==cargos.cve_cargo}">
+              <v-list-item-content>
+                <v-list-item-title><v-icon>mdi-account</v-icon> <span>{{ cargos.nombre }}</span> <span
+                    class="font-weight-bold">{{ cargos.apellido_paterno }}</span> <span class="font-italic">{{
+                      cargos.apellido_materno }}</span> </v-list-item-title>
+                <v-list-item-subtitle>{{ cargos.concepto }}</v-list-item-subtitle>
+              </v-list-item-content>
+              <v-list-item-action>
+                ${{ numeral(cargos.total).format('0,0') }}
+              </v-list-item-action>
+            </v-list-item>
+          </v-list>
+          <div v-else class="redx d-flex justify-center align-center text-h5 accent--text"
+            style="width: 100%;height: 100%;">Sin datos</div>
+            <v-divider></v-divider>
+
+          <!-- <v-text-field outlined placeholder="Folio" hide-details class="mb-3" style="font-size: 30px;"
+            reverse></v-text-field> -->
+
+            <span class="ml-5">semanas</span>
+            <div class="d-flex flex-wrap mb-3">
 
             <div class="d-flex flex-wrap justify-space-around white" style="width: 100%; row-gap: 15px;">
               <div class="bluex d-flex align-center" >
-                <v-checkbox class="mt-0 check-size" v-model="semanas" label="semana 1" hide-details value="semana1"
+                <v-checkbox class="mt-0 check-size" v-model="semanas_reingreso" label="semana 1" hide-details value="semana1"
                   :error-messages="iErrors.semana1" :disabled="!Boolean(semana1_view_ins)"></v-checkbox>
               </div>
               <div class="bluex d-flex align-center" >
-                <v-checkbox class="mt-0 check-size" v-model="semanas" label="semana 2" hide-details value="semana2"
+                <v-checkbox class="mt-0 check-size" v-model="semasemanas_reingresonas" label="semana 2" hide-details value="semana2"
                   :error-messages="iErrors.semana2" :disabled="!Boolean(semana2_view_ins)"></v-checkbox>
               </div>
               <div class="bluex d-flex align-center" >
-                <v-checkbox class="mt-0 check-size" v-model="semanas" label="semana 3" hide-details value="semana3"
+                <v-checkbox class="mt-0 check-size" v-model="semanas_reingreso" label="semana 3" hide-details value="semana3"
                   :error-messages="iErrors.semana3" :disabled="!Boolean(semana3_view_ins)"></v-checkbox>
               </div>
               <div class="bluex d-flex align-center" >
-                <v-checkbox class="mt-0 check-size" v-model="semanas" label="semana 4" hide-details value="semana4"
+                <v-checkbox class="mt-0 check-size" v-model="semanas_reingreso" label="semana 4" hide-details value="semana4"
                   :error-messages="iErrors.semana4" :disabled="!Boolean(semana4_view_ins)"></v-checkbox>
               </div>
             </div>
           </div>
 
         </v-card-text>
+        <v-divider></v-divider>
         <v-card-actions>
-          <v-btn block rounded color="primary"> Aceptar</v-btn>
+          <v-btn block rounded color="primary" @click="fnCreateReingreso"> Aceptar</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -540,13 +576,14 @@
 import { onMounted, ref, getCurrentInstance, watch, computed } from "vue";
 import Search from "@/components/ui/Search.vue";
 import numeral from "numeral";
-import { getCargosByFolioService, getProgramaCursoVeranoService, getGrupoCursoVeranoService, getPersonaExisteService, setCreateInscripcionService, getSociosInAccionService, getInscripcionesCursosVeranoService, getFotoSocioService, getSemanasRestantesService, getColaboradorByNominaService, bajaInscripcionCursoService } from '@/services/curso_verano_service'
+import { getCargosByFolioService, getProgramaCursoVeranoService, getGrupoCursoVeranoService, getPersonaExisteService, setCreateInscripcionService,setUpdateInscripcionService, getSociosInAccionService, getInscripcionesCursosVeranoService, getFotoSocioService, getSemanasRestantesService, getColaboradorByNominaService, bajaInscripcionCursoService, getDatosInscripcionService,setReingresoCursoService } from '@/services/curso_verano_service'
 import dayjs from "dayjs";
-import { useInscripcionCursoVeranoValidacion } from '@/composables/useInscripcionCursoVeranoValidacion'
+import { useInscripcionCursoVeranoValidacion,useUpdateCursoVeranoValidacion } from '@/composables/useInscripcionCursoVeranoValidacion'
 import { saveAs } from "file-saver";
 import { mdiBorderColor } from "@mdi/js";
 
 const { iValid, iErrors, iClear } = useInscripcionCursoVeranoValidacion()
+const { iValid:iValidUpdate, iErrors:iErrorsUpdate, iClear:iClearUpdate } = useUpdateCursoVeranoValidacion()
 
 const root = getCurrentInstance().proxy;
 const headers = ref([
@@ -590,6 +627,8 @@ const filters = ref([
   { label: "Tipo Accion", key: "nivel", value: "", type: "select" },
   { label: "Grado", key: "nivel_grado", value: "", type: "text" },
 ]);
+
+const cve_inscripcion_curso_verano=ref()
 
 const cve_curso = ref(1)
 const curso_nombre = ref()
@@ -657,13 +696,19 @@ const lst_semanas = [
   { semana: 4, title: 'del 13 al 16' },
 ]
 
-const fecha_inscripcion = dayjs().format('DD [de] MMMM [de] YYYY')
+const fecha_inscripcion = ref(dayjs())
 
 const menu_nacimiento = ref(false)
 const activePicker = ref()
 
 
 const dialog_inscripcion = ref(false)
+
+
+const folio_reingreso=ref()
+const lst_cargos_reingreso=ref([])
+const cve_cargo_reingreso=ref()
+const semanas_reingreso=ref([])
 
 
 const cEdad = computed(() => dayjs().diff(nacimiento.value, "year"))
@@ -681,10 +726,17 @@ async function getCargosByFolio() {
   lst_cargos.value = await getCargosByFolioService(folio.value)
 }
 
+async function getCargosByFolioReingreso() {
+
+  lst_cargos_reingreso.value = await getCargosByFolioService(folio_reingreso.value)
+}
+
 async function fnOpenRegistro(cargo_) {
 
   iClear()
+  iClearUpdate()
   // getFotoSocio()
+  fecha_inscripcion.value= dayjs()
 
   if (Boolean(cargo_.cve_persona) && cargo_.cve_cuota == 42) {
     const data_ = await getPersonaExisteService(cargo_.cve_persona)
@@ -704,12 +756,15 @@ async function fnOpenRegistro(cargo_) {
   numero_accion.value = cargo_.accion_
   dialog_inscripcion.value = true
   dialog_recibo.value = false
+  observaciones.value=undefined
   lst_cargos.value = []
+
 }
 
 async function fnOpenRegistroColaboradro() {
 
   iClear()
+  iClearUpdate()
   fnGetProgramas()
   cve_cargo.value = undefined
   cve_cuota.value = 102
@@ -726,7 +781,8 @@ async function fnOpenRegistroColaboradro() {
 function fnCloseRegistro() {
 
   iClear()
-
+  iClearUpdate()
+cve_inscripcion_curso_verano.value=undefined
   cve_curso.value = 1
   folio.value = undefined
   folio_boleta.value = undefined
@@ -746,7 +802,7 @@ function fnCloseRegistro() {
   nadar.value = undefined
   programa.value = undefined
   grupo.value = undefined
-  observaciones.valu = undefined
+  observaciones.value = undefined
 
   semanas.value = []
 
@@ -763,6 +819,7 @@ function fnCloseRegistro() {
 async function fnCreateRegistro() {
 
   iClear()
+  iClearUpdate()
 
   //es 1 cuando no se encuentre ningun folio en el caso de 
   const semanas_ = semanas.value.reduce((a, v) => ({ ...a, [v]: folio.value ?? 1 }), {})
@@ -809,6 +866,47 @@ async function fnCreateRegistro() {
 
 
 }
+
+
+async function fnUpdateRegistro() {
+
+  iClear()
+iClearUpdate()
+  
+  const data_send = {
+    folio_boleta: folio_boleta.value,    
+    cve_persona: cve_persona.value,
+    nombre: nombre.value,
+    paterno: paterno.value,
+    materno: materno.value,
+    nacimiento: nacimiento.value,
+    genero: genero.value,
+    tutor: tutor.value,
+    telefono_contacto: telefono_contacto.value,
+    calle_numero: calle_numero.value,
+    colonia: colonia.value,
+    nadar: nadar.value,
+    observaciones: observaciones.value,
+  }
+
+  console.log(data_send)
+
+  const data_valid = await iValidUpdate(data_send)
+
+  console.log(data_valid)
+
+  const id_inscripcion = await setUpdateInscripcionService(cve_inscripcion_curso_verano.value,data_valid)
+
+  if (Boolean(id_inscripcion)) {
+    root.$toast.success("Inscripcion al curso realizada con exito");
+    fnCloseRegistro()
+    fnGetInscripcionesCursosVerano()
+  }
+  else root.$toast.error("No se registro al curso ocurrio un error");
+
+
+}
+
 
 
 async function fnGetProgramas() {
@@ -931,6 +1029,7 @@ async function getFotoSocio() {
 async function fnGetReingreso(id_curso_inscripcion) {
   semanas.value = []
   console.log(id_curso_inscripcion)
+  cve_inscripcion_curso_verano.value=id_curso_inscripcion
   const data_semana = await getSemanasRestantesService(id_curso_inscripcion)
   if (data_semana) {
     semana1_view_ins.value = Boolean(parseInt(data_semana.semana1))
@@ -972,6 +1071,78 @@ async function fnBajaIncripcionCurso(id_curso_inscripcion) {
      await bajaInscripcionCursoService(id_curso_inscripcion)
      fnGetInscripcionesCursosVerano()
     }
+}
+
+async function fnGetEdit(id_inscripcion)
+{
+  console.log(id_inscripcion)
+ const data= await getDatosInscripcionService(id_inscripcion)
+ console.log(data)
+ dialog_inscripcion.value=true
+ if(Boolean(data))
+ {
+  cve_inscripcion_curso_verano.value=id_inscripcion
+  fnGetProgramas()
+  folio.value=data.folio_pago,
+  folio_boleta.value=data.folio_boleta,
+  costo.value=data.total
+  numero_accion.value=data.accion_
+  if(Boolean(data.semana1))semanas.value.push('semana1')
+  if(Boolean(data.semana2))semanas.value.push('semana2')
+  if(Boolean(data.semana3))semanas.value.push('semana3')
+  if(Boolean(data.semana4))semanas.value.push('semana4')
+  cve_persona.value=data.cve_persona
+  nombre.value=data.nombre
+  paterno.value=data.apellido_paterno
+  materno.value=data.apellido_materno
+  nacimiento.value=data.fecha_nacimiento
+  genero.value=data.sexo
+  tutor.value=data.responsable
+  telefono_contacto.value=data.telefono_contacto
+  calle_numero.value=data.calle_numero,
+  colonia.value=data.colonia
+  fecha_inscripcion.value=dayjs(data.fecha_inscripcion)
+  nadar.value=parseInt(data.nadar)
+  programa.value=data.cve_curso_verano_programa
+  grupo.value=data.cve_curso_verano_programa_grupo
+  observaciones.value=data.observaciones
+  cve_cuota.value=data.cve_cuota
+  cve_accion.value=data.cve_accion
+  fnGetProgramasGrupo(data.cve_curso_verano_programa)
+ }
+}
+
+function fnSelectedCargoReingreso(cargo_reingreso)
+{
+console.log(cargo_reingreso)
+cve_cargo_reingreso.value=cargo_reingreso
+}
+
+async function fnCreateReingreso()
+{
+
+  const semanas_ = semanas_reingreso.value.reduce((a, v) => ({ ...a, [v]: folio_reingreso.value ?? 1 }), {})
+  const semanas_reingreso_ = semanas_reingreso.value.reduce((a, v) => ({ ...a, [`${v}_reingreso`]: cve_cargo_reingreso.value ?? 1 }), {})
+
+  console.log(cve_inscripcion_curso_verano.value)
+  console.log(folio_reingreso.value)
+  console.log(cve_cargo_reingreso.value)
+  console.log(semanas_)
+  console.log(semanas_reingreso_)
+  console.log({cve_curso_inscripcion:cve_inscripcion_curso_verano.value,...semanas_,...semanas_reingreso_})
+
+  const data_send={...semanas_,...semanas_reingreso_}
+
+  const data=await setReingresoCursoService(cve_inscripcion_curso_verano.value,data_send)
+  if(data)
+{
+  cve_inscripcion_curso_verano.value=undefined
+  folio_reingreso.value=undefined
+  lst_cargos_reingreso.value=[]
+  semanas_reingreso.value=[]  
+  dialog_reingreso.value=false
+  fnGetInscripcionesCursosVerano()
+}
 }
 
 //#endregion metodos

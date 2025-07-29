@@ -1,13 +1,62 @@
 import { $axiosDeportes as $axios} from '@/util/axios_instance'
 
-export const getCargosByFolioService=async(folio)=>{
+export const getTorneosService=async()=>{
     try {              
-        const { data ,status} = await $axios.get("curso-verano/cargo-by-folio",{params:{folio}});
+        const { data ,status} = await $axios.get("roles-juego/torneos");
         return data
     } catch (error) {
         throw Error("Error al guardar antecedentes familiares")
     }
 }
+
+export const getEquiposByTorneosService=async(id_torneo_futbol)=>{
+    try {              
+        const { data ,status} = await $axios.get("roles-juego/equipos-by-torneo",{params:{id_torneo_futbol}});
+        return data
+    } catch (error) {
+        throw Error("Error al guardar antecedentes familiares")
+    }
+}
+
+
+export const getFixtureService=async(torneo)=>{
+    try {              
+        const { data ,status} = await $axios.get("roles-juego/fixture",{params:{torneo}});
+        return data
+    } catch (error) {
+        throw Error("Error al guardar antecedentes familiares")
+    }
+}
+
+
+
+export const setCreateFixtureService=async(data_send)=>{
+    try {            
+        const { data ,status} = await $axios.post("roles-juego/registrar-fixture",data_send);
+        return data
+    } catch (error) {
+        throw Error("Error al guardar antecedentes familiares")
+    }
+}
+
+export const addFechaService=async(partido,fecha)=>{
+    try {            
+        const { data ,status} = await $axios.put("roles-juego/asignar-fecha",{partido,fecha});
+        return data
+    } catch (error) {
+        throw Error("Error al guardar antecedentes familiares")
+    }
+}
+
+
+
+
+
+
+
+
+
+
 
 export const getPersonaExisteService=async(cve_persona)=>{
     try {              
@@ -36,17 +85,7 @@ export const getGrupoCursoVeranoService=async(programa)=>{
     }
 }
 
-export const setCreateInscripcionService=async(data_send)=>{
-    try {            
-        const formData = new FormData();
-        for (const [key, value] of Object.entries(data_send)) {formData.append(key,value)}
 
-        const { data ,status} = await $axios.post("curso-verano/inscripcion",formData,{headers: { "Content-Type": "multipart/form-data" }});
-        return data
-    } catch (error) {
-        throw Error("Error al guardar antecedentes familiares")
-    }
-}
 
 export const setUpdateInscripcionService=async(id_inscripcion_curso,data_send)=>{
     try {            

@@ -106,7 +106,7 @@
                     :error-messages="iErrors.fecha_nac"></v-text-field>
                   <!-- v-mask="'####-##-##'" -->
                 </template>
-                <v-date-picker :max="fecha_fin" no-title v-model="fecha_nac" @input="menu5 = false"></v-date-picker>
+                <v-date-picker :max="fecha_fin" no-title v-model="fecha_nac" @input="menu5 = false" locale="es-mx"></v-date-picker>
               </v-menu>
             </v-col>
 
@@ -238,7 +238,7 @@
                     } ,${i.socio == 1 ? 'Socio' : 'Dueño'}`;
                 }
                   " return-object :disabled="tipo_invitado === 0" filled
-                :error-messages="iErrors.cve_socio_invita || iErrors.cve_accion_cargo || iErrors.cve_persona_cargo">
+                :error-messages="iErrors.cve_accion_cargo || iErrors.cve_persona_cargo">
               </v-select>
             </v-col>
 
@@ -268,7 +268,7 @@
                         } ,${i.socio == 1 ? 'Socio' : 'Dueño'}`;
                     }
                       " return-object :disabled="tipo_invitado === 0"
-                    :error-messages="iErrors.cve_socio_invita || iErrors.cve_accion_cargo || iErrors.cve_persona_cargo"></v-select>
+                    :error-messages="iErrors.cve_accion_cargo || iErrors.cve_persona_cargo"></v-select>
                 </v-col>
 
 
@@ -366,7 +366,7 @@
                   return `${i.nombre} ${i.apellido_paterno} ${i.apellido_materno
                     } ,${i.socio == 1 ? 'Socio' : 'Dueño'}`;
                 }
-                  " return-object :disabled="tipo_invitado === 0" filled :error-messages="iErrorsReingreso.cve_socio_invita || iErrorsReingreso.cve_accion_cargo || iErrorsReingreso.cve_persona_cargo"></v-select>
+                  " return-object :disabled="tipo_invitado === 0" filled :error-messages="iErrorsReingreso.cve_accion_cargo || iErrorsReingreso.cve_persona_cargo"></v-select>
             </v-col>
 
             <v-col cols="12" md="12">
@@ -804,7 +804,7 @@ const Guardar = debounce(async () => {
 
   if (tipo_invitado.value === 1) {
     // solo se envia cundo el tipo es 1 indica que se busca un socio para poner como el que invita
-    dataSend.cve_socio_invita = cve_socio_invita.value?.cve_socio;
+    // dataSend.cve_socio_invita = cve_socio_invita.value?.cve_socio;// se eimina no se usa ya que mejor se usa la cve_persona para si es socio o dueño 
     dataSend.cve_accion_cargo = cve_socio_invita.value?.cve_accion;
     dataSend.cve_persona_cargo = cve_socio_invita.value?.cve_persona;
   }
@@ -865,7 +865,7 @@ const reingreso = debounce(async () => {
 
   if (tipo_invitado.value === 1) {
     // solo se envia cundo el tipo es 1
-    dataSend.cve_socio_invita = cve_socio_invita.value.cve_socio;
+    // dataSend.cve_socio_invita = cve_socio_invita.value.cve_socio;// se elimina porque no se usa se camba por el cve_persona por si es socio o dueño
     dataSend.cve_accion_cargo = cve_socio_invita.value.cve_accion;
     dataSend.cve_persona_cargo = cve_socio_invita.value.cve_persona;
   }

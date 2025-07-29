@@ -40,7 +40,7 @@ export const useValidacionInvitado = () => {
         
         //es esl el socio que invito se busca primero mediante la accion ejemplo un socio de la accion 200 realizo la invitacion mediante una m8
         //en el select regresa un objeto con estos tres 
-        cve_socio_invita: number().when('tipo_invitado',{is:1,then:s=>s.required(),otherwise:s=>s.optional()}).label("Socio Invita"),      
+        // cve_socio_invita: number().when('tipo_invitado',{is:1,then:s=>s.required(),otherwise:s=>s.optional()}).label("Socio Invita"),      // se quita es validacion no se usa
         cve_accion_cargo: number().when('tipo_invitado',{is:1,then:s=>s.required(),otherwise:s=>s.optional()}).label("Accion cargo"),
         cve_persona_cargo: number().when('tipo_invitado',{is:1,then:s=>s.required(),otherwise:s=>s.optional()}).label("Persona Cargo"),
         
@@ -74,7 +74,7 @@ export const useValidacionInvitado = () => {
             fecha_inicio:"",
             fecha_fin:"",
             cve_accion_cargo:"",
-            cve_socio_invita:"",
+            // cve_socio_invita:"",
             total:"",
             dias_acceso:"",
     })
@@ -116,7 +116,7 @@ export const useValidacionInvitadoReingreso = () => {
         fecha_inicio: mixed().required().label("Fecha inicio").test('is-date',({label})=>`${label} no es un a fecha valida`,(value,context)=>dayjs(value).isValid()),        
         fecha_fin: mixed().required().label("Fecha fin").test('is-date',({label})=>`${label} no es un a fecha valida`,(value,context)=>dayjs(value).isValid()),
         dias_acceso: array().of(date()).when('tipo_acceso',{is:1,then:s=>s.min(0),otherwise:s=>min(1)}).label("Dias"),
-        cve_socio_invita: number().when('tipo_invitado',{is:1,then:s=>s.required(),otherwise:s=>s.optional()}).label("Socio Invita"),      
+        // cve_socio_invita: number().when('tipo_invitado',{is:1,then:s=>s.required(),otherwise:s=>s.optional()}).label("Socio Invita"),      
         cve_accion_cargo: number().when('tipo_invitado',{is:1,then:s=>s.required(),otherwise:s=>s.optional()}).label("Accion cargo"),
         cve_persona_cargo: number().when('tipo_invitado',{is:1,then:s=>s.required(),otherwise:s=>s.optional()}).label("Persona Cargo"),
         total: number().required().label("Costo"),
@@ -130,7 +130,7 @@ export const useValidacionInvitadoReingreso = () => {
         fecha_inicio:'',
         fecha_fin:'',
         dias_acceso:'',
-        cve_socio_invita:'',
+        // cve_socio_invita:'',
         cve_accion_cargo:'',
         cve_persona_cargo:'',
         total:''

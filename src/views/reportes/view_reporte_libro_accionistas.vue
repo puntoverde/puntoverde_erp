@@ -89,6 +89,9 @@
         <v-icon v-else color="error">mdi-close-circle</v-icon>
       </template>
 
+      <template v-slot:item.actions="{item,value}">
+          <v-btn icon color="#0f783e" outlined small @click="fnExportarExcelHistorico(item.cve_accion)"><v-icon>mdi-file-excel</v-icon></v-btn>
+      </template>
 
 
 
@@ -102,7 +105,7 @@
                     <th colspan="3" class="secondary lighten-4 text-center text-h6 white--text">
                       Dueño Anterior
                     </th>
-                    <th colspan="4" class="primary lighten-1 text-center text-h6 white--text">
+                    <th colspan="3" class="primary lighten-1 text-center text-h6 white--text">
                       Dueño nuevo
                     </th>
 
@@ -114,18 +117,18 @@
                     <th class="blue-grey lighten-5 primaryx lighten-1x text-center white--textx">Nombre</th>
                     <th class="blue-grey lighten-5 primaryx lighten-1x text-center white--textx">Rfc</th>
                     <th class="blue-grey lighten-5 primaryx lighten-1x text-center white--textx">Curp</th>
-                    <th class="blue-grey lighten-5 primaryx lighten-1x text-center white--textx">Fecha</th>
+                    <!-- <th class="blue-grey lighten-5 primaryx lighten-1x text-center white--textx">Fecha</th> -->
                   </tr>
                 </thead>
                 <tbody>
                   <tr v-for="item_ in lst_historico">
-                    <td>{{ item_.nombre }}</td>
+                    <td><span>{{ item_.nombre }}</span><span class="font-weight-bold mx-1">{{item_.apellido_paterno}}</span><span class="font-italic">{{ item_.apellido_materno }}</span></td>
                     <td>{{ item_.rfc }}</td>
                     <td>{{ item_.curp }}</td>
-                    <td>{{ item_.nombre_actual }}</td>
+                    <td>{{ item_.nombre_actual }} <span class="font-weight-bold mx-1">{{item_.apellido_paterno_actual}}</span><span class="font-italic">{{ item_.apellido_materno_actual }}</span></td>
                     <td>{{ item_.rfc_actual }}</td>
                     <td>{{ item_.curp_actual }}</td>
-                    <td>{{ item_.fecha_modificacion }}</td>
+                    <!-- <td>{{ item_.fecha_modificacion }}</td> -->
                   </tr>
                 </tbody>
               </template>
@@ -156,7 +159,7 @@ const headers = ref([
   { text: "Fecha Adquisicion", align: "right", value: "fecha_adquisicion" },
   { text: "Fecha Alta", align: "right", value: "fecha_alta" },
   { text: "Estatus", align: "center", value: "estatus" },
-  { text: "", align: "center", value: "actions", sortable: false },
+  { text: "xx", align: "center", value: "actions", sortable: false },
 ]);
 const lst_libros_acciones = ref([]);
 const search = ref("");
@@ -273,6 +276,58 @@ function fnUpdateFecha(data_)
   updateFechasAccionService(cve_accion,fecha_alta,fecha_adquisicion)
   data_.menu=false
   data_.menu2=false
+}
+
+async function fnExportarExcelHistorico(cve_accion)
+{
+const data=await getLibroAccionistaHistoricoService(cve_accion)
+
+console.log("🚀 ~ data:", data);
+
+
+
+  //crea el libro excel
+  let wb = XLSX.utils.book_new();
+  //crea la hoja para el libro de excel
+  wb.SheetNames.push("reporte_libro_acciones_historio");
+  //se obtienen los datos a exportar 
+  let ws_data1 = data.map(item => [
+    `${item.nombre} ${item.apellido_paterno} ${item.apellido_materno}`,
+    item.rfc,
+    item.curp,
+    `${item.nombre_actual} ${item.apellido_paterno_actual} ${item.apellido_materno_actual}`,
+    item.rfc_actual,
+    item.curp_actual,
+  ]);
+
+  // console.log(ws_data1)
+
+
+
+  let ws_data = [[
+    'Dueño Anterior',
+    'Dueño Anterior Rfc',
+    'Dueño Anterior Curp',
+    'Dueño Actual',
+    'Dueño Actual Rfc',
+    'Dueño Actual Curp',
+  ], ...ws_data1];
+
+  // console.log(ws_data)
+  let ws = XLSX.utils.aoa_to_sheet(ws_data, { origin: "B2" });
+
+  wb.Sheets["reporte_libro_acciones_historio"] = ws;
+
+  let wbout = XLSX.write(wb, { bookType: "xlsx", type: "binary" });
+
+  function s2ab(s) {
+    let buf = new ArrayBuffer(s.length); //convert s to arrayBuffer
+    let view = new Uint8Array(buf); //create uint8array as viewer
+    for (let i = 0; i < s.length; i++) view[i] = s.charCodeAt(i) & 0xff; //convert to octet
+    return buf;
+  }
+
+  saveAs(new Blob([s2ab(wbout)], { type: "application/octet-stream" }), `reporte_libro_acciones_historio_${dayjs().format("YYYYMMDDHHmmss")}.xlsx`);
 }
 
 

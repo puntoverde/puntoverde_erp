@@ -304,6 +304,14 @@ export default [
         meta: { requiresAuth: true ,is_modulo:true}
       },
 
+      {
+        path: '/roles-juego',
+        name: 'roles_juego',
+        component: () => import(/* webpackChunkName: "proceso-validacion-nuevo-dueno" */ './../views/procesos/view_roles_juego.vue'),
+        props: true,
+        meta: { requiresAuth: true ,is_modulo:true}
+      },
+
 
       
 ]
